@@ -12,10 +12,6 @@ and verifies recovery after rescission.
 **Google Cloud:** Cloud Run package plus Firestore-compatible persistence  
 **Data:** Every facility, person, message, advisory, resource, and approval is fictional.
 
-## Fastest judge path
-
-Open the [state-aware guided demo](https://one-advisory-109051079423.us-central1.run.app/?guide=1). It explains why each step matters, highlights the exact next control, follows the real workflow state, and keeps every approval or consequential action under user control. The judge-proof view remains one click away throughout.
-
 ## The distinction
 
 Existing systems can define zones, identify customers, send alerts, record approvals, and publish
@@ -87,7 +83,7 @@ and `/docs` for OpenAPI.
 
 Current local baseline on August 16, 2026:
 
-- `94 passed`
+- `90 passed`
 - `13/13` HTTP acceptance checks
 - `11/11` foundational proof and `8/8` adversarial hardening proof
 - static accessibility result is recorded in [VALIDATION_EVIDENCE.md](VALIDATION_EVIDENCE.md)
