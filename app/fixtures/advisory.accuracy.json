@@ -1,0 +1,11 @@
+{
+  "matched": 5,
+  "total": 5,
+  "checks": {
+    "advisory_type": true,
+    "zone": true,
+    "effective_at": true,
+    "authority": true,
+    "status": true
+  }
+}

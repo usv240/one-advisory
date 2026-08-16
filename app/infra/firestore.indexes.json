@@ -1,0 +1,1 @@
+{"indexes":[{"collectionGroup":"one_advisory_wakes","queryScope":"COLLECTION","fields":[{"fieldPath":"status","order":"ASCENDING"},{"fieldPath":"due_at","order":"ASCENDING"}]},{"collectionGroup":"one_advisory_wakes","queryScope":"COLLECTION","fields":[{"fieldPath":"status","order":"ASCENDING"},{"fieldPath":"lease_expires_at","order":"ASCENDING"}]}],"fieldOverrides":[]}

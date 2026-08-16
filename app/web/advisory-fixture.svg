@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">Synthetic authorized boil-water advisory</title>
+  <desc id="desc">A fictional advisory artifact created only for model evaluation.</desc>
+  <rect width="1200" height="760" fill="#f4f8f8"/>
+  <rect x="65" y="55" width="1070" height="650" rx="18" fill="#fff" stroke="#174752" stroke-width="3"/>
+  <rect x="65" y="55" width="1070" height="100" rx="18" fill="#174752"/>
+  <text x="110" y="115" fill="#fff" font-family="Arial" font-size="31" font-weight="700">EAST COUNTY WATER AUTHORITY — SYNTHETIC</text>
+  <text x="110" y="225" fill="#a34025" font-family="Arial" font-size="50" font-weight="700">BOIL WATER ADVISORY</text>
+  <text x="110" y="280" fill="#17333a" font-family="Arial" font-size="26">Status: ACTIVE</text>
+  <line x1="110" y1="315" x2="1090" y2="315" stroke="#c7d7da" stroke-width="2"/>
+  <text x="110" y="380" fill="#17333a" font-family="Arial" font-size="28" font-weight="700">Affected zone</text>
+  <text x="110" y="420" fill="#17333a" font-family="Arial" font-size="25">East service zone</text>
+  <text x="110" y="485" fill="#17333a" font-family="Arial" font-size="28" font-weight="700">Effective</text>
+  <text x="110" y="525" fill="#17333a" font-family="Arial" font-size="25">August 16, 2026 at 9:30 AM</text>
+  <text x="110" y="590" fill="#17333a" font-family="Arial" font-size="28" font-weight="700">Authorized by</text>
+  <text x="110" y="630" fill="#17333a" font-family="Arial" font-size="25">Jordan Lee, Incident Commander</text>
+  <text x="820" y="680" fill="#6d8085" font-family="Arial" font-size="17">FICTIONAL TABLETOP ARTIFACT</text>
+</svg>

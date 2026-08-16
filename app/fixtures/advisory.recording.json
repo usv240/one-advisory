@@ -1,0 +1,44 @@
+{
+  "model": "gemini-3.5-flash",
+  "mode": "recorded-live-vertex-ai",
+  "synthetic": true,
+  "transcription": "EAST COUNTY WATER AUTHORITY - SYNTHETIC\n\nBOIL WATER ADVISORY\n\nStatus: ACTIVE\n\nAffected zone: East service zone\n\nEffective: August 16, 2026 at 9:30 AM\n\nAuthorized by: Jordan Lee, Incident Commander\n\nFICTIONAL TABLETOP ARTIFACT",
+  "fields": [
+    {
+      "key": "advisory_type",
+      "value": "BOIL WATER ADVISORY",
+      "quote": "BOIL WATER ADVISORY",
+      "confidence": 1.0,
+      "provenance": "gemini-3.5-flash"
+    },
+    {
+      "key": "status",
+      "value": "ACTIVE",
+      "quote": "Status: ACTIVE",
+      "confidence": 1.0,
+      "provenance": "gemini-3.5-flash"
+    },
+    {
+      "key": "zone",
+      "value": "East service zone",
+      "quote": "Affected zone: East service zone",
+      "confidence": 1.0,
+      "provenance": "gemini-3.5-flash"
+    },
+    {
+      "key": "effective_at",
+      "value": "August 16, 2026 at 9:30 AM",
+      "quote": "Effective: August 16, 2026 at 9:30 AM",
+      "confidence": 1.0,
+      "provenance": "gemini-3.5-flash"
+    },
+    {
+      "key": "authority",
+      "value": "Jordan Lee, Incident Commander",
+      "quote": "Authorized by: Jordan Lee, Incident Commander",
+      "confidence": 1.0,
+      "provenance": "gemini-3.5-flash"
+    }
+  ],
+  "dropped": []
+}

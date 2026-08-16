@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="One Advisory turns an authorized drinking-water warning into verified facility-specific response.">
+  <title>One Advisory — From warning to verified response</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#command">Skip to incident command</a>
+  <header class="topbar"><a class="brand" href="/"><span class="brand-symbol" aria-hidden="true"><i></i><i></i><i></i></span><b>One Advisory</b></a><nav><a href="#why">The gap</a><a href="#command">Live response</a><a href="#sources">Sources</a><a href="/judges">For judges</a><button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="true"><span aria-hidden="true"></span><b>Dark</b></button></nav></header>
+  <main>
+    <section class="hero shell">
+      <div class="hero-copy"><p class="kicker">Critical-facility response fleet</p><h1>One alert.<br><em>Three realities.</em><br>No silent gaps.</h1><p>An authorized water advisory reaches everyone at once. One Advisory turns it into different operational work for dialysis, schools, and long-term care—then verifies what actually happened.</p><div class="hero-actions"><a href="#command" class="button primary">Activate tabletop <span>→</span></a><a href="/judges" class="button quiet">Inspect architecture</a></div><small>Synthetic facilities and incident. Officials retain advisory, closure, and resource authority.</small></div>
+      <div class="hero-map" aria-label="Synthetic advisory zone with three critical facilities">
+        <div class="map-grid"></div><svg viewBox="0 0 700 560" role="img" aria-label="East service zone synthetic map"><path class="river" d="M-40 440C130 330 160 490 320 380S510 220 750 315"/><path class="zone" d="M130 98L560 82L625 404L180 470Z"/><path class="road" d="M15 190L690 375M70 520L570 10M10 340L690 160"/><g class="marker dialysis" transform="translate(285 228)"><circle r="21"/><path d="M-7 0H7M0-7V7"/></g><g class="marker school" transform="translate(450 338)"><circle r="21"/><path d="M-9 6H9V-4L0-10L-9-4Z"/></g><g class="marker care" transform="translate(510 188)"><circle r="21"/><path d="M-9 8V-8H9V8M-3 8V1H3V8"/></g></svg>
+        <div class="map-card map-title"><small>ACTIVE TABLETOP</small><b>East service zone</b><span>3 critical facilities</span></div>
+        <div class="map-card map-proof"><span class="proof-ring"></span><div><b>Alert delivered</b><small>Response unverified</small></div></div>
+      </div>
+    </section>
+
+    <section class="definition-strip"><div class="shell"><p><b>An alert is a message.</b> A response is a chain of accountable actions.</p><span>One Advisory begins after authorized issuance.</span></div></section>
+
+    <section class="section shell" id="why">
+      <div class="section-title"><p class="kicker">Why a fleet</p><h2>The same water cannot mean the same workflow.</h2><p>Each institution has different dependencies, authority, evidence, and recovery work. The agents are specialized because the operations are specialized.</p></div>
+      <div class="facility-explain"><article><span>D</span><div><small>DIALYSIS</small><h3>Treatment-water continuity</h3><p>Qualified facility review, continuity planning, patient communication, and transport coordination.</p></div></article><article><span>S</span><div><small>SCHOOL / CHILDCARE</small><h3>Drinking, hygiene, food, families</h3><p>Accessible notices and verified supplies must align with official direction.</p></div></article><article><span>C</span><div><small>LONG-TERM CARE</small><h3>Resident care and environmental services</h3><p>Clinical dependencies and alternative-water logistics cannot disappear inside a mass alert.</p></div></article></div>
+    </section>
+
+    <section class="command-section" id="command">
+      <div class="shell command-heading"><div><p class="kicker">Live synthetic incident</p><h2>Response command</h2></div><div><button class="button quiet small" id="reset">Reset</button><button class="button primary small" id="autorun">Run full response</button></div></div>
+      <div class="shell command" aria-busy="false">
+        <header class="incident-bar"><div class="incident-state"><span id="state-light"></span><div><b id="state-title">Loading incident</b><small id="incident-id">Synthetic tabletop</small></div></div><div class="incident-auth">Authorized source <strong>Human</strong></div><dl><div><dt>Facilities</dt><dd id="facility-count">3</dd></div><div><dt>Sourced tasks</dt><dd id="task-count">9</dd></div><div><dt>Policy blocks</dt><dd id="rejection-count">0</dd></div></dl></header>
+        <div class="command-grid">
+          <aside class="phase-panel"><p class="panel-label">INCIDENT PHASE</p><ol id="phases"><li data-state="authorized_advisory_received"><span>01</span><div><b>Authorized advisory</b><small>System did not issue it</small></div></li><li data-state="proposals_ready"><span>02</span><div><b>Facility proposals</b><small>Sources attached</small></div></li><li data-state="instructions_delivered"><span>03</span><div><b>Approved outreach</b><small>Sandbox receipts</small></div></li><li data-state="responses_in_progress"><span>04</span><div><b>Responses</b><small>Evidence + constraints</small></div></li><li data-state="resource_conflict"><span>05</span><div><b>Resource conflict</b><small>Human allocation</small></div></li><li data-state="response_verified"><span>06</span><div><b>Escalation</b><small>No silent non-response</small></div></li><li data-state="closed"><span>07</span><div><b>Recovery</b><small>Rescission + after-action</small></div></li></ol><button class="button primary full" id="advance">Activate response fleet</button><p id="next-note">Intersects the authorized zone with the synthetic critical-facility registry.</p></aside>
+          <section class="operations-panel">
+            <div class="ops-tabs" role="tablist"><button role="tab" data-tab="facilities" aria-selected="true">Facility matrix</button><button role="tab" data-tab="map" aria-selected="false">Response map</button><button role="tab" data-tab="conflict" aria-selected="false">Resource desk <span id="conflict-badge">0</span></button></div>
+            <div class="ops-view" id="view-facilities" role="tabpanel"><div class="facility-table-head"><span>Facility</span><span>Response state</span><span>Verified tasks</span></div><div id="facility-list"></div></div>
+            <div class="ops-view" id="view-map" role="tabpanel" hidden><div class="ops-map"><div class="map-grid"></div><svg viewBox="0 0 700 480"><path class="river" d="M-40 380C130 270 160 430 320 320S510 160 750 255"/><path class="zone" d="M130 78L560 62L625 344L180 410Z"/><path class="road" d="M15 150L690 315M70 450L570 0M10 290L690 120"/><g id="map-markers"></g></svg><div class="map-legend"><span><i class="ok"></i>Evidence</span><span><i class="wait"></i>Waiting</span><span><i class="risk"></i>Escalated</span></div></div></div>
+            <div class="ops-view" id="view-conflict" role="tabpanel" hidden><div id="conflict-panel" class="empty-state"><span></span><h3>No resource conflict yet</h3><p>The fleet will surface competing requests without allocating on its own.</p></div></div>
+          </section>
+          <aside class="trace-panel"><div class="trace-title"><div><p class="panel-label">EVIDENCE TRACE</p><h3>Agent activity</h3></div><span>LIVE</span></div><div id="timeline" class="timeline" aria-live="polite"></div><footer><span>Actor · action · source · authority</span><a href="/api/proof">Open proof</a></footer></aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shell" id="sources"><div class="section-title"><p class="kicker">Evidence ledger</p><h2>Guidance in. Unsupported claims out.</h2><p>Each source has a bounded role. None is presented as validation of One Advisory.</p></div><div class="sources"><a href="https://www.cdc.gov/water-emergency/php/dwact/index.html"><small>CDC TOOLKIT</small><h3>Facility-specific planning</h3><p>Communication, preparation, follow-up, and distinct facility audiences.</p><b>Open source ↗</b></a><a href="https://www.cdc.gov/mmwr/preview/mmwrhtml/mm6006a1.htm"><small>CDC INVESTIGATION</small><h3>Coordination failure evidence</h3><p>Historical communication, institutional, and alternative-water gaps.</p><b>Open source ↗</b></a><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5587347/"><small>PUBLISHED RESPONSE</small><h3>Hospital dependencies</h3><p>Clinical and support operations affected by loss of potable water.</p><b>Open source ↗</b></a><a href="https://uoms.canopymapping.co/boil-water-notice-management-software"><small>PRIOR ART</small><h3>What we do not claim</h3><p>Zone, notification, audit, and rescission workflows already exist.</p><b>Open source ↗</b></a></div></section>
+    <section class="authority-section"><div class="shell"><div><p class="kicker">Authority boundary</p><h2>The fleet proposes.<br>Officials decide.</h2></div><ul><li>Cannot issue or rescind an advisory</li><li>Cannot close or evacuate a facility</li><li>Cannot allocate scarce resources</li><li>Cannot certify compliance or safety</li></ul></div></section>
+  </main>
+  <footer class="footer"><div class="shell"><div class="brand"><span class="brand-symbol"><i></i><i></i><i></i></span><b>One Advisory</b></div><p>Built for the All Things Agentic Hackathon. Synthetic tabletop; no agency, utility, facility, or source author endorses this project.</p><nav><a href="/judges">Judge brief</a><a href="/docs">API</a><a href="#sources">Sources</a></nav></div></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div><script src="/static/app.js" defer></script>
+</body></html>
+
