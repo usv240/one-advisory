@@ -83,7 +83,7 @@ and `/docs` for OpenAPI.
 
 Current local baseline on August 16, 2026:
 
-- `82 passed`
+- `90 passed`
 - `13/13` HTTP acceptance checks
 - `11/11` foundational proof and `8/8` adversarial hardening proof
 - static accessibility result is recorded in [VALIDATION_EVIDENCE.md](VALIDATION_EVIDENCE.md)
@@ -123,4 +123,25 @@ No source author, public agency, utility, facility, or prior-art vendor endorses
 ## August 16 hardening
 
 One Advisory now includes transactional Firestore acknowledgement wakes, bounded retry/dead-letter behavior, Cloud Trace correlation, missing-source safe stops, failed-contact recovery that invents no acknowledgement, and an ambiguous-rescission authority gate. The public judge console runs both governance suites. All delivery and contact actions remain sandboxed.
+
+## Findings and learnings
+
+- Notification and verified facility response are different states; treating delivery as completion hides operational gaps.
+- The same advisory needs different evidence by facility, while resource allocation remains a named command decision.
+- Managed features matter when they narrow capability: four GET-only runtimes, four identities, one governed gateway, two live Model Armor templates, and no unsupported inline-enforcement claim.
+- This proves routing, governance and failure behavior, not public-health outcomes or general facility coverage.
+
+## Originality and reused-code disclosure
+
+One Advisory's fleet, incident schema, UI, fixtures, managed capability mapping, evaluation, failure laboratory, research and submission materials were created for this contest-period submission. Generic clock, wake, observability, quarantine and verifier primitives were adapted from the entrant's Day Three contest-period production spine. They are disclosed in app/spine/__init__.py and independently tested here.
+
+## Managed Agent Platform proof
+
+![One Advisory managed platform](docs/managed-platform.svg)
+
+The deployed /api/platform endpoint reads Google managed APIs live. It currently verifies four scale-to-zero Agent Runtime resources, four unique Agent Identities, binding to the shared governed client-to-agent MCP gateway, and two regional Model Armor templates. It fails explicitly if the evidence plane is unavailable; it does not substitute a checked-in claim. Firestore provides bounded cross-session incident and facility memory rather than raw transcript replay.
+
+## Automated background execution
+
+The deployed one-advisory-wake-scan Cloud Scheduler job calls the internal wake worker every minute with a Google-signed OIDC token from the dedicated agent-wake-scheduler service account. The application verifies audience, issuer, email and email verification before scanning. Unauthenticated calls return HTTP 401. The worker claims Firestore wakes transactionally, executes idempotent actions, bounds retries and retains dead letters. Reproduce or update the job with app/infra/provision_scheduler.ps1 after deployment.
 

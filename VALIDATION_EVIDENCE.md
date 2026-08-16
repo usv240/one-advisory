@@ -4,7 +4,7 @@
 
 | Gate | Result |
 |---|---:|
-| Python workflow, API, reader, Firestore, and hardening tests | 82 passed |
+| Python workflow, API, reader, Firestore, scheduler, platform, runtime, and hardening tests | 90 passed |
 | Static accessibility checks | 10/10 |
 | Executable HTTP demonstration | 13/13 |
 | Foundational safeguard proof | 11/11 |
@@ -18,7 +18,7 @@
 ## Deployed verification
 
 - Public service: https://one-advisory-109051079423.us-central1.run.app
-- Revision: `one-advisory-00006-pdr`.
+- Revision: `one-advisory-00010-dd2`.
 - `/health`: `firestore`, `gemini-3.5-flash`, `human-only` authority, transactional wakes, active Cloud Trace.
 - Public acceptance: `13/13`; foundational proof: `11/11`; hardening proof: `8/8`; landing, verification console, and architecture brief: HTTP 200.
 - Deployment uncovered and fixed Firestore-invalid nested coordinate arrays; a regression test now scans the incident shape.
@@ -42,4 +42,13 @@ production or impact claim.
 - An ambiguous rescission cannot begin recovery.
 - Three facility acknowledgement wakes use deterministic IDs and transactional Firestore claims.
 - The deployed service reports active Cloud Trace and emits a request trace header.
+
+## Managed platform verification
+
+- Live endpoint: https://one-advisory-109051079423.us-central1.run.app/api/platform
+- Four managed Agent Runtime resources; min instances 0, max instances 1.
+- Four distinct immutable Agent Identities.
+- Every runtime is bound to the shared managed MCP gateway with CLIENT_TO_AGENT governed access.
+- Two regional Model Armor templates are live and API-verified. Direct inline screening by preview Agent Identities is not claimed; managed runtimes enforce bounded structural request/response controls.
+- Four Agent Registry services remain the managed discovery plane.
 
