@@ -97,7 +97,7 @@ def _iso(moment: datetime) -> str:
 def _append(incident: dict[str, Any], actor: str, action: str, detail: str, status: str = "complete", evidence: list[str] | None = None) -> None:
     incident["timeline"].append({
         "sequence": len(incident["timeline"]) + 1,
-        "at": _iso(BASE_TIME + timedelta(minutes=len(incident["timeline"]) * 5)),
+        "at": _iso(datetime.now(timezone.utc) if incident.get("clock_mode") == "realtime" else BASE_TIME + timedelta(minutes=len(incident["timeline"]) * 5)),
         "actor": actor,
         "action": action,
         "detail": detail,
@@ -108,8 +108,12 @@ def _append(incident: dict[str, Any], actor: str, action: str, detail: str, stat
 
 def create_incident() -> dict[str, Any]:
     incident = {
-        "incident_id": f"oa-{uuid4().hex[:8]}",
+        "incident_id": f"oa-{uuid4().hex}",
         "synthetic": True,
+        "origin": "sample_fixture",
+        "data_class": "synthetic",
+        "clock_mode": "simulated",
+        "created_at": _iso(BASE_TIME),
         "status": "authorized_advisory_received",
         "advisory": {
             "type": "boil_water",

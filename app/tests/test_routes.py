@@ -11,7 +11,6 @@ def post(path, body=None):
 
 def test_public_contract_and_full_flow():
     assert client.get("/").status_code == 200
-    assert client.get("/judges").status_code == 200
     health = client.get("/health").json()
     assert health["advisory_authority"] == health["resource_authority"] == "human-only"
     incident = post("/api/incidents").json()

@@ -32,7 +32,7 @@ class AllocationRequest(BaseModel):
     approver: str = Field(min_length=3, max_length=140)
 
 
-def build_router(store: IncidentStore) -> APIRouter:
+def build_router(store: IncidentStore, *, allow_global_reset: bool = False) -> APIRouter:
     router = APIRouter(prefix="/api", tags=["one-advisory"])
 
     def require(incident_id: str) -> dict[str, Any]:
@@ -100,6 +100,8 @@ def build_router(store: IncidentStore) -> APIRouter:
 
     @router.post("/reset")
     def reset() -> dict[str, Any]:
+        if not allow_global_reset:
+            raise HTTPException(status_code=403, detail="global reset is disabled in this deployment")
         store.clear()
         return {"ok": True}
 

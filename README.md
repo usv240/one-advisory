@@ -12,6 +12,12 @@ and verifies recovery after rescission.
 **Google Cloud:** Cloud Run package plus Firestore-compatible persistence  
 **Data:** Every facility, person, message, advisory, resource, and approval is fictional.
 
+## Public operational sandbox
+
+The public Cloud Run service is intentionally signup-free for hackathon evaluation and accepts fictional synthetic inputs only. It is no longer limited to one fixture: users can create multiple durable advisory exercises, supply a fictional authorized advisory and three critical-facility records, switch between incidents, and run each through the complete authority-gated response. `GET/POST /api/pilot/incidents` exposes the same capability as a typed API; `/api/pilot/readiness` states the boundary.
+
+The deterministic sample remains one click away. Public global reset is disabled, new record IDs use the complete random UUID, internal scheduler workers remain OIDC-authenticated, and the customer UI contains no judge-only routes. Real operational data or connectors require a separately protected organization deployment; the public service is not an authorized emergency notification system.
+
 ## The distinction
 
 Existing systems can define zones, identify customers, send alerts, record approvals, and publish
@@ -56,7 +62,7 @@ that it prevents illness, reduces response time, or improves compliance.
 
 | Layer | Running implementation |
 |---|---|
-| Interface | Responsive incident-command workspace and dedicated judge route in light/dark themes |
+| Interface | Responsive light/dark incident queue with custom synthetic intake and one-click sample |
 | API | FastAPI with typed state transitions and conflict responses |
 | Fleet | Eight registered roles with versions, scope, data class, and approval policy |
 | Model | Gemini 3.5 Flash advisory reader with exact-quote verification; deterministic replay for tests |
@@ -78,12 +84,11 @@ python -m uvicorn service.main:app --host 127.0.0.1 --port 8000
 python scripts/demo_flow.py --url http://127.0.0.1:8000
 ```
 
-Open `/` for the product, `/judges` for the verification console, `/api/proof` for executable safeguards, `/api/hardening/proof` for failure recovery,
-and `/docs` for OpenAPI.
+Open `/` for the product, `/api/pilot/readiness` for sandbox boundaries, `/api/proof` for executable safeguards, `/api/hardening/proof` for failure recovery, and `/docs` for OpenAPI.
 
-Current local baseline on August 16, 2026:
+Current local baseline on August 17, 2026:
 
-- `90 passed`
+- `95 passed`
 - `13/13` HTTP acceptance checks
 - `11/11` foundational proof and `8/8` adversarial hardening proof
 - static accessibility result is recorded in [VALIDATION_EVIDENCE.md](VALIDATION_EVIDENCE.md)
@@ -122,7 +127,7 @@ No source author, public agency, utility, facility, or prior-art vendor endorses
 
 ## August 16 hardening
 
-One Advisory now includes transactional Firestore acknowledgement wakes, bounded retry/dead-letter behavior, Cloud Trace correlation, missing-source safe stops, failed-contact recovery that invents no acknowledgement, and an ambiguous-rescission authority gate. The public judge console runs both governance suites. All delivery and contact actions remain sandboxed.
+One Advisory now includes transactional Firestore acknowledgement wakes, bounded retry/dead-letter behavior, Cloud Trace correlation, missing-source safe stops, failed-contact recovery that invents no acknowledgement, and an ambiguous-rescission authority gate. The API exposes both governance proof suites. All delivery and contact actions remain sandboxed.
 
 ## Findings and learnings
 

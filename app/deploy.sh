@@ -7,7 +7,7 @@ gcloud run deploy one-advisory \
   --project "$GOOGLE_CLOUD_PROJECT" \
   --region "$REGION" \
   --allow-unauthenticated \
-  --set-env-vars "GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT,USE_FIRESTORE=true,ENABLE_CLOUD_TRACE=true" \
+  --set-env-vars "GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT,USE_FIRESTORE=true,ENABLE_CLOUD_TRACE=true,ALLOW_GLOBAL_RESET=false" \
   --quiet
 
 SERVICE_URL="$(gcloud run services describe one-advisory --project "$GOOGLE_CLOUD_PROJECT" --region "$REGION" --format='value(status.url)')"
