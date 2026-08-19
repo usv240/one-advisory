@@ -18,6 +18,19 @@ from spine.http_trace import install_http_tracing
 PROJECT=os.environ.get("GOOGLE_CLOUD_PROJECT","local")
 USE_FIRESTORE=os.environ.get("USE_FIRESTORE","").lower() in {"1","true","yes"}
 ALLOW_GLOBAL_RESET=os.environ.get("ALLOW_GLOBAL_RESET","").lower() in {"1","true","yes"}
+GOOGLE_SERVICES=[
+ {"name":"Gemini 3.5 Flash on Vertex AI","role":"Grounded advisory extraction with deterministic replay"},
+ {"name":"Google Gen AI SDK","role":"Required Google agent framework"},
+ {"name":"Cloud Run","role":"Public orchestration service"},
+ {"name":"Firestore","role":"Durable incidents, memory, and wake state"},
+ {"name":"Cloud Scheduler","role":"OIDC-authenticated background wake scans"},
+ {"name":"Cloud Trace","role":"End-to-end request observability"},
+ {"name":"Agent Registry","role":"Discovery and versioning for four specialized agents"},
+ {"name":"Agent Runtime","role":"Four scale-to-zero managed agent runtimes"},
+ {"name":"Agent Identity","role":"Distinct zero-trust identity per managed agent"},
+ {"name":"Agent Gateway","role":"Governed client-to-agent MCP access"},
+ {"name":"Model Armor","role":"Regional prompt and response protection templates"},
+]
 if USE_FIRESTORE:
  from google.cloud import firestore
  incident_store=FirestoreIncidentStore(firestore.Client(project=PROJECT)); persistence="firestore"
@@ -32,6 +45,6 @@ WEB=Path(__file__).resolve().parent.parent/"web"; app.mount("/static",StaticFile
 
 @app.get("/health")
 def health()->dict[str,Any]:
- return {"ok":True,"project":"one-advisory","google_cloud_project":PROJECT,"persistence":persistence,"synthetic_demo":True,"operating_mode":"public-synthetic-sandbox","public_data_policy":"synthetic-only","global_reset":ALLOW_GLOBAL_RESET,"advisory_authority":"human-only","resource_authority":"human-only","model":"gemini-3.5-flash","tracing":trace_status,"durable_wakes":"firestore-transactional" if USE_FIRESTORE else "memory-transactional","simulation_clock":True}
+ return {"ok":True,"project":"one-advisory","google_cloud_project":PROJECT,"persistence":persistence,"synthetic_demo":True,"operating_mode":"public-synthetic-sandbox","public_data_policy":"synthetic-only","global_reset":ALLOW_GLOBAL_RESET,"advisory_authority":"human-only","resource_authority":"human-only","model":"gemini-3.5-flash","tracing":trace_status,"durable_wakes":"firestore-transactional" if USE_FIRESTORE else "memory-transactional","simulation_clock":True,"google_services":GOOGLE_SERVICES}
 @app.get("/",include_in_schema=False)
 def index()->FileResponse:return FileResponse(WEB/"index.html")

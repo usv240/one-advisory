@@ -6,11 +6,11 @@
   <title>One Advisory — From warning to verified response</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/styles.css"><link rel="stylesheet" href="/static/pilot.css">
+  <link rel="stylesheet" href="/static/styles.css"><link rel="stylesheet" href="/static/pilot.css"><link rel="stylesheet" href="/static/cloud-status.css">
 </head>
 <body>
   <a class="skip-link" href="#command">Skip to incident command</a>
-  <header class="topbar"><a class="brand" href="/"><span class="brand-symbol" aria-hidden="true"><i></i><i></i><i></i></span><b>One Advisory</b></a><nav><a href="#why">The gap</a><a href="#command">Live response</a><a href="#sources">Sources</a><button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="true"><span aria-hidden="true"></span><b>Dark</b></button></nav></header>
+  <header class="topbar"><a class="brand" href="/"><span class="brand-symbol" aria-hidden="true"><i></i><i></i><i></i></span><b>One Advisory</b></a><nav><a href="#why">The gap</a><a href="#command">Live response</a><a href="#sources">Sources</a><div class="cloud-status" data-cloud-status data-platform-endpoint="/api/platform"><button class="cloud-status-trigger" id="cloud-status-trigger" type="button" data-state="checking" aria-expanded="false" aria-controls="cloud-status-panel"><span class="cloud-status-dot" aria-hidden="true"></span><span class="cloud-status-copy">Live stack</span></button><div class="cloud-status-panel" id="cloud-status-panel" role="region" aria-label="Google services used by One Advisory" aria-hidden="true"><div class="cloud-status-head"><span><strong>Built and running on Google</strong><small data-cloud-summary>Checking live deployment...</small></span><b class="cloud-status-live" data-cloud-badge>Checking</b></div><ul class="cloud-status-services"><li><b>Connecting</b><span>Reading the live service inventory.</span></li></ul><small class="cloud-status-note">Verified from <a href="/health" target="_blank" rel="noreferrer">live health</a> and <a href="/api/platform" target="_blank" rel="noreferrer">managed proof</a>.</small></div></div><button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="true"><span aria-hidden="true"></span><b>Dark</b></button></nav></header>
   <main>
     <section class="hero shell">
       <div class="hero-copy"><p class="kicker">Critical-facility response fleet</p><h1>One alert.<br><em>Three realities.</em><br>No silent gaps.</h1><p>An authorized water advisory reaches everyone at once. One Advisory turns it into different operational work for dialysis, schools, and long-term care—then verifies what actually happened.</p><div class="hero-actions"><a href="#command" class="button primary">Activate tabletop <span>→</span></a></div><small>Synthetic facilities and incident. Officials retain advisory, closure, and resource authority.</small></div>
@@ -67,6 +67,6 @@
     </form>
   </dialog>  </main>
   <footer class="footer"><div class="shell"><div class="brand"><span class="brand-symbol"><i></i><i></i><i></i></span><b>One Advisory</b></div><p>Public synthetic operations sandbox; no agency, utility, facility, or source author endorses this product.</p><nav><a href="#sources">Sources</a></nav></div></footer>
-  <div id="toast" class="toast" role="status" aria-live="polite"></div><script src="/static/app.js" defer></script><script src="/static/pilot.js" defer></script>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div><script src="/static/cloud-status.js" defer></script><script src="/static/app.js" defer></script><script src="/static/pilot.js" defer></script>
 </body></html>
 
