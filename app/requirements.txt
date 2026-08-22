@@ -4,5 +4,6 @@ pydantic>=2.9
 google-cloud-firestore>=2.19
 google-cloud-trace>=1.13
 google-genai>=1.0
+google-cloud-aiplatform>=1.114
 opentelemetry-sdk>=1.27
 opentelemetry-exporter-gcp-trace>=1.7

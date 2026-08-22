@@ -1,17 +1,10 @@
-"""Managed Agent Runtime adapter for four bounded read-only capabilities."""
+"""Managed Agent Runtime adapter for bounded operational command proposals."""
 from __future__ import annotations
 
 import json
 import os
-from dataclasses import dataclass
-from typing import Any, Callable
-from urllib.error import HTTPError, URLError
-from urllib.request import Request, urlopen
+from typing import Any
 
-BACKEND_URL = os.getenv(
-    "ONE_ADVISORY_BACKEND_URL",
-    "https://one-advisory-109051079423.us-central1.run.app",
-).rstrip("/")
 ROLE = os.getenv("ONE_ADVISORY_AGENT_ROLE", "facility-fleet")
 
 
@@ -19,111 +12,60 @@ class GuardrailRejected(ValueError):
     pass
 
 
-class CapabilityInvocationError(RuntimeError):
-    pass
-
-
 class StructuralGuard:
-    """Bound payload size/type and reject instruction-shaped control text."""
-
     MAX_REQUEST_BYTES = 4096
-    MAX_RESPONSE_BYTES = 1_000_000
-    CONTROL_PHRASES = (
-        "ignore previous",
-        "system prompt",
-        "developer message",
-        "override policy",
-    )
+    CONTROL_PHRASES = ("ignore previous", "system prompt", "developer message", "override policy")
 
     @classmethod
     def screen_request(cls, payload: dict[str, Any]) -> dict[str, Any]:
         if not isinstance(payload, dict):
             raise GuardrailRejected("request must be an object")
         serialized = json.dumps(payload, sort_keys=True)
-        if len(serialized.encode("utf-8")) > cls.MAX_REQUEST_BYTES:
+        if len(serialized.encode()) > cls.MAX_REQUEST_BYTES:
             raise GuardrailRejected("request exceeds bounded size")
-        lowered = serialized.lower()
-        if any(phrase in lowered for phrase in cls.CONTROL_PHRASES):
+        if any(phrase in serialized.lower() for phrase in cls.CONTROL_PHRASES):
             raise GuardrailRejected("instruction-shaped request rejected")
-        return {
-            "screened": True,
-            "control": "local-structural-boundary",
-            "bytes": len(serialized.encode("utf-8")),
-        }
-
-    @classmethod
-    def screen_response(cls, payload: dict[str, Any]) -> dict[str, Any]:
-        if not isinstance(payload, dict):
-            raise GuardrailRejected("upstream response must be an object")
-        size = len(json.dumps(payload, sort_keys=True).encode("utf-8"))
-        if size > cls.MAX_RESPONSE_BYTES:
-            raise GuardrailRejected("upstream response exceeds bounded size")
-        return {
-            "screened": True,
-            "control": "local-structural-boundary",
-            "bytes": size,
-        }
+        return {"screened": True, "control": "local-structural-boundary", "bytes": len(serialized.encode())}
 
 
-@dataclass(frozen=True)
-class Capability:
-    method: str
-    path: str
-
-
-CAPABILITIES = {
-    "facility-fleet": Capability("GET", "/api/registry"),
-    "policy-gateway": Capability("GET", "/api/proof"),
-    "resource-coordinator": Capability("GET", "/api/conformance"),
-    "recovery-verifier": Capability("GET", "/api/hardening/proof"),
+COMMAND_STATES = {
+    "facility-fleet": {"activate_fleet": {"authorized_advisory_received"}},
+    "policy-gateway": {
+        "reject_unregistered_action": {"proposals_ready"},
+        "deliver_standing_playbook": {"proposals_ready"},
+    },
+    "resource-coordinator": {
+        "detect_resource_conflict": {"responses_in_progress"},
+        "escalate_nonresponse": {"allocation_approved"},
+    },
+    "recovery-verifier": {"verify_recovery": {"response_verified"}},
 }
 
 
 class OneAdvisoryRuntimeAgent:
-    def __init__(
-        self,
-        role: str = ROLE,
-        backend_url: str = BACKEND_URL,
-        armor: Any | None = None,
-        opener: Callable[..., Any] = urlopen,
-    ):
-        if role not in CAPABILITIES:
+    def __init__(self, role: str = ROLE, armor: Any | None = None):
+        if role not in COMMAND_STATES:
             raise ValueError(f"unsupported role: {role}")
         self.role = role
-        self.backend_url = backend_url
         self.armor = armor or StructuralGuard()
-        self._opener = opener
 
     def query(self, payload: dict[str, Any] | None = None) -> dict[str, Any]:
         body = payload or {}
-        request_guardrail = self.armor.screen_request(body)
-        capability = CAPABILITIES[self.role]
-        request = Request(
-            self.backend_url + capability.path,
-            method=capability.method,
-        )
-        try:
-            with self._opener(request, timeout=30) as response:
-                result = json.loads(response.read().decode("utf-8"))
-        except (HTTPError, URLError, TimeoutError, json.JSONDecodeError) as exc:
-            raise CapabilityInvocationError(
-                f"{self.role} invocation failed: {type(exc).__name__}"
-            ) from exc
-        response_guardrail = self.armor.screen_response(result)
+        guard = self.armor.screen_request(body)
+        command = str(body.get("expected_command") or "")
+        status = str(body.get("status") or "")
+        allowed = command in COMMAND_STATES[self.role] and status in COMMAND_STATES[self.role][command]
         return {
             "agent_role": self.role,
-            "invoked": capability.path,
-            "result": result,
-            "guardrails": {
-                "request": request_guardrail,
-                "response": response_guardrail,
-            },
+            "incident_id": body.get("incident_id"),
+            "status_observed": status,
+            "proposed_command": command if allowed else None,
+            "allowed": allowed,
+            "reason": "registered role and workflow state matched" if allowed else "command or state outside registered capability",
+            "guardrails": {"request": guard, "response": {"screened": True, "control": "typed-command-schema"}},
             "managed_security_boundary": {
                 "gateway": "day-three-ingress",
-                "model_armor_templates": [
-                    "one-advisory-agent-input",
-                    "one-advisory-agent-output",
-                ],
+                "model_armor_templates": ["one-advisory-agent-input", "one-advisory-agent-output"],
                 "inline_model_armor_claimed": False,
             },
         }

@@ -9,6 +9,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 from one_advisory.store import IncidentStore
+from spine.public_trace import public_action_trace
 from one_advisory.workflow import (
     activate_fleet,
     advance_safe_automation,
@@ -34,7 +35,7 @@ class AllocationRequest(BaseModel):
     approver: str = Field(min_length=3, max_length=140)
 
 
-def build_router(store: IncidentStore, scheduler=None, *, allow_global_reset: bool = False) -> APIRouter:
+def build_router(store: IncidentStore, scheduler=None, *, allow_global_reset: bool = False, model_runner=None, managed_orchestrator=None) -> APIRouter:
     router = APIRouter(prefix="/api", tags=["one-advisory"])
 
     def schedule_facility_checks(incident: dict[str, Any]) -> None:
@@ -64,10 +65,15 @@ def build_router(store: IncidentStore, scheduler=None, *, allow_global_reset: bo
         store.put(incident)
         return public_view(incident)
 
+    def managed(incident: dict[str, Any], role: str, command: str, operation: Any) -> Any:
+        if managed_orchestrator is not None:
+            managed_orchestrator.require(incident, role, command)
+        return operation(incident)
+
     @router.post("/incidents")
     def open_incident() -> dict[str, Any]:
         incident = create_incident()
-        advance_safe_automation(incident)
+        advance_safe_automation(incident, managed_orchestrator)
         schedule_facility_checks(incident)
         store.put(incident)
         return public_view(incident)
@@ -76,47 +82,68 @@ def build_router(store: IncidentStore, scheduler=None, *, allow_global_reset: bo
     def get_incident(incident_id: str) -> dict[str, Any]:
         return public_view(require(incident_id))
 
+    @router.get("/incidents/{incident_id}/trace")
+    def get_incident_trace(incident_id: str) -> dict[str, Any]:
+        return public_action_trace(require(incident_id), "incident_id")
+
     @router.post("/incidents/{incident_id}/autopilot")
     def autopilot(incident_id: str) -> dict[str, Any]:
         """Resume governed work and stop at the next external or authority event."""
-        return mutate(incident_id, advance_safe_automation)
+        return mutate(incident_id, lambda incident: advance_safe_automation(incident, managed_orchestrator))
     @router.post("/incidents/{incident_id}/activate")
     def activate(incident_id: str) -> dict[str, Any]:
-        return mutate(incident_id, activate_fleet)
+        return mutate(incident_id, lambda incident: managed(incident, "facility-fleet", "activate_fleet", activate_fleet))
 
     @router.post("/incidents/{incident_id}/policy-test")
     def policy_test(incident_id: str) -> dict[str, Any]:
-        return mutate(incident_id, reject_unregistered_action)
+        return mutate(incident_id, lambda incident: managed(incident, "policy-gateway", "reject_unregistered_action", reject_unregistered_action))
 
     @router.post("/incidents/{incident_id}/approve")
     def approve(incident_id: str, request: ApprovalRequest) -> dict[str, Any]:
-        return mutate(incident_id, lambda incident: approve_proposals(incident, request.approver))
+        return mutate(incident_id, lambda incident: managed(incident, "policy-gateway", "deliver_standing_playbook", lambda row: approve_proposals(row, request.approver)))
 
     @router.post("/incidents/{incident_id}/facility-updates")
     def facility_updates(incident_id: str) -> dict[str, Any]:
-        return mutate(incident_id, lambda incident: (receive_facility_updates(incident), advance_safe_automation(incident)))
+        return mutate(incident_id, lambda incident: (receive_facility_updates(incident), advance_safe_automation(incident, managed_orchestrator)))
 
     @router.post("/incidents/{incident_id}/detect-conflict")
     def conflict(incident_id: str) -> dict[str, Any]:
-        return mutate(incident_id, detect_resource_conflict)
+        return mutate(incident_id, lambda incident: managed(incident, "resource-coordinator", "detect_resource_conflict", detect_resource_conflict))
 
     @router.post("/incidents/{incident_id}/allocate")
     def allocate(incident_id: str, request: AllocationRequest) -> dict[str, Any]:
-        return mutate(incident_id, lambda incident: (resolve_resource_conflict(incident, request.option_id, request.approver), advance_safe_automation(incident)))
+        return mutate(incident_id, lambda incident: (resolve_resource_conflict(incident, request.option_id, request.approver), advance_safe_automation(incident, managed_orchestrator)))
 
     @router.post("/incidents/{incident_id}/escalate")
     def escalate(incident_id: str) -> dict[str, Any]:
-        return mutate(incident_id, escalate_nonresponse)
+        return mutate(incident_id, lambda incident: managed(incident, "resource-coordinator", "escalate_nonresponse", escalate_nonresponse))
 
     @router.post("/incidents/{incident_id}/recover")
     def recover(incident_id: str, request: ApprovalRequest) -> dict[str, Any]:
-        return mutate(incident_id, lambda incident: rescind_and_recover(incident, request.approver))
+        return mutate(incident_id, lambda incident: managed(incident, "recovery-verifier", "verify_recovery", lambda row: rescind_and_recover(row, request.approver)))
 
     @router.post("/demo/full")
     def full_demo() -> dict[str, Any]:
-        incident = run_full_demo()
+        incident = create_incident()
+        if model_runner is not None:
+            try:
+                model_runner.apply(incident)
+            except Exception as exc:
+                raise HTTPException(status_code=503, detail="live model evidence unavailable; no replay substituted") from exc
+        incident = run_full_demo(incident, managed_orchestrator)
         store.put(incident)
         return incident
+
+    @router.get("/model-evidence")
+    def model_evidence() -> dict[str, Any]:
+        return {
+            "execution": "POST /api/demo/full returns live, fail-closed model receipts",
+            "models": [
+                {"name": "gemini-3.5-flash", "purpose": "quote-grounded synthetic artifact extraction", "docs": "https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/3-5-flash"},
+                {"name": "gemini-embedding-001", "purpose": "semantic evidence routing without authority decisions", "docs": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/embeddings/get-text-embeddings"},
+            ],
+            "replay_policy": "recorded outputs are test-only; deployed full workflows do not silently substitute them",
+        }
 
     @router.post("/reset")
     def reset() -> dict[str, Any]:

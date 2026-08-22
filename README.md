@@ -1,5 +1,7 @@
 # One Advisory
 
+Release proof: [2026-08-22 release audit](RELEASE_AUDIT_2026-08-22.md) · [bonus ledger](BONUS_SCORE_LEDGER.md) · [real-world validation protocol](EXTERNAL_VALIDATION_PROTOCOL.md) · [live model contract](https://one-advisory-109051079423.us-central1.run.app/api/model-evidence)
+
 > One warning. Three facility realities. One verified response.
 
 One Advisory is an incident-command fleet that starts **after** an authorized drinking-water
@@ -73,7 +75,7 @@ that it prevents illness, reduces response time, or improves compliance.
 | Interface | Responsive light/dark incident queue with custom synthetic intake and one-click sample |
 | API | FastAPI with typed state transitions and conflict responses |
 | Fleet | Eight registered roles with versions, scope, data class, and approval policy |
-| Model | Gemini 3.5 Flash advisory reader with exact-quote verification; deterministic replay for tests |
+| Model | Gemini 3.5 Flash live advisory reader with exact-quote verification; deterministic replay only for tests |
 | Persistence | Memory locally; Firestore adapter in Cloud mode |
 | Control | Consequential actions and scarce-resource allocation require named humans |
 | Evidence | Source-linked playbooks, facility evidence, policy rejection, ordered audit history |
@@ -141,7 +143,7 @@ One Advisory now includes transactional Firestore acknowledgement wakes, bounded
 
 - Notification and verified facility response are different states; treating delivery as completion hides operational gaps.
 - The same advisory needs different evidence by facility, while resource allocation remains a named command decision.
-- Managed features matter when they narrow capability: four GET-only runtimes, four identities, one governed gateway, two live Model Armor templates, and no unsupported inline-enforcement claim.
+- Managed features matter when they narrow capability: four typed-command runtimes, four identities, one governed gateway, two live Model Armor templates, and no unsupported inline-enforcement claim.
 - This proves routing, governance and failure behavior, not public-health outcomes or general facility coverage.
 
 ## Originality and reused-code disclosure
@@ -152,7 +154,7 @@ One Advisory's fleet, incident schema, UI, fixtures, managed capability mapping,
 
 ![One Advisory managed platform](docs/managed-platform.svg)
 
-The deployed /api/platform endpoint reads Google managed APIs live. It currently verifies four scale-to-zero Agent Runtime resources, four unique Agent Identities, binding to the shared governed client-to-agent MCP gateway, and two regional Model Armor templates. It fails explicitly if the evidence plane is unavailable; it does not substitute a checked-in claim. Firestore provides bounded cross-session incident and facility memory rather than raw transcript replay.
+The primary workflow requires typed operational proposals from the deployed managed runtimes, and `/api/platform` independently reads Google managed APIs live. It currently verifies four scale-to-zero Agent Runtime resources, four unique Agent Identities, binding to the shared governed client-to-agent MCP gateway, and two regional Model Armor templates. It fails explicitly if the evidence plane is unavailable; it does not substitute a checked-in claim. Firestore provides bounded cross-session incident and facility memory rather than raw transcript replay.
 
 ## Automated background execution
 

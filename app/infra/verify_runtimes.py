@@ -20,12 +20,16 @@ def main() -> None:
     summaries = []
     for runtime in platform["runtimes"]:
         agent = client.agent_engines.get(name=runtime["name"])
-        result = agent.query(payload={"verification": "synthetic-read-only"})
+        role = runtime["role"]
+        commands = {"facility-fleet": ("authorized_advisory_received", "activate_fleet"), "policy-gateway": ("proposals_ready", "reject_unregistered_action"), "resource-coordinator": ("responses_in_progress", "detect_resource_conflict"), "recovery-verifier": ("response_verified", "verify_recovery")}
+        status, command = commands[role]
+        result = agent.query(payload={"incident_id": "synthetic-verification", "status": status, "expected_command": command})
         guards = result.get("guardrails", {})
         if not (
             guards.get("request", {}).get("screened")
             and guards.get("response", {}).get("screened")
-            and result.get("invoked", "").startswith("/api/")
+            and result.get("allowed")
+            and result.get("proposed_command") == command
         ):
             raise RuntimeError(f"bounded contract not proven for {runtime['role']}")
         if result.get("managed_security_boundary", {}).get(
@@ -35,7 +39,7 @@ def main() -> None:
         summaries.append(
             {
                 "role": result.get("agent_role"),
-                "invoked": result.get("invoked"),
+                "proposed_command": result.get("proposed_command"),
                 "request_control": guards["request"]["control"],
                 "response_control": guards["response"]["control"],
             }

@@ -55,3 +55,14 @@ production or impact claim.
 - Two regional Model Armor templates are live and API-verified. Direct inline screening by preview Agent Identities is not claimed; managed runtimes enforce bounded structural request/response controls.
 - Four Agent Registry services remain the managed discovery plane.
 
+## 2026-08-22 live release proof
+
+- Cloud Run revision: `one-advisory-00020-bs4` (100% traffic; max instances 1; concurrency 10).
+- Final local suite: **111 passed**.
+- All four Agent Runtime revisions independently passed typed-command verification with structural request screening and typed response controls.
+- Live full workflow: incident `oa-5076b5ccf2b64c1b9caffaced08ab320` closed in 23.4 seconds.
+- The primary request recorded **6 managed-agent receipts** across all four roles and all six commands.
+- Live model receipt: `gemini-3.5-flash`; live semantic routing: `gemini-embedding-001`.
+- Executable proof endpoint: **11/11**. Public action trace: **14 events**. `/api/platform` and `/api/model-evidence` returned 200.
+- The in-app browser could not connect because the workspace Windows browser helper failed before opening a tab. No visual-browser result is claimed; static UI/accessibility contracts and deployed HTTP behavior were verified.
+- Stakeholder outcomes and bonus publication points remain unclaimed pending real consented evidence/public URLs.

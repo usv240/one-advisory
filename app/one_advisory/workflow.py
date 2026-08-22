@@ -281,23 +281,33 @@ def rescind_and_recover(incident: dict[str, Any], approver: str) -> dict[str, An
     return incident
 
 
-def advance_safe_automation(incident: dict[str, Any]) -> list[str]:
+def advance_safe_automation(incident: dict[str, Any], orchestrator=None) -> list[str]:
     """Run governed fleet work until an external event or authority decision is required."""
     actions: list[str] = []
     while True:
         if incident["status"] == "authorized_advisory_received":
+            if orchestrator is not None:
+                orchestrator.require(incident, "facility-fleet", "activate_fleet")
             activate_fleet(incident)
             actions.append("registered_fleet_activated")
+            if orchestrator is not None:
+                orchestrator.require(incident, "policy-gateway", "reject_unregistered_action")
             reject_unregistered_action(incident)
             actions.append("unauthorized_action_rejected")
+            if orchestrator is not None:
+                orchestrator.require(incident, "policy-gateway", "deliver_standing_playbook")
             approve_proposals(incident, "Standing response policy - synthetic pre-authorization")
             actions.append("facility_playbooks_delivered")
             continue
         if incident["status"] == "responses_in_progress":
+            if orchestrator is not None:
+                orchestrator.require(incident, "resource-coordinator", "detect_resource_conflict")
             detect_resource_conflict(incident)
             actions.append("resource_conflict_detected")
             continue
         if incident["status"] == "allocation_approved":
+            if orchestrator is not None:
+                orchestrator.require(incident, "resource-coordinator", "escalate_nonresponse")
             escalate_nonresponse(incident)
             actions.append("nonresponse_escalated")
             continue
@@ -337,17 +347,26 @@ def public_view(incident: dict[str, Any]) -> dict[str, Any]:
     return view
 
 
-def run_full_demo() -> dict[str, Any]:
-    incident = create_incident()
+def run_full_demo(incident: dict[str, Any] | None = None, orchestrator=None) -> dict[str, Any]:
+    incident = incident or create_incident()
+    if orchestrator is not None:
+        orchestrator.require(incident, "facility-fleet", "activate_fleet")
     activate_fleet(incident)
+    if orchestrator is not None:
+        orchestrator.require(incident, "policy-gateway", "reject_unregistered_action")
     reject_unregistered_action(incident)
-    approve_proposals(incident, "Jordan Lee, incident commander — synthetic")
+    if orchestrator is not None:
+        orchestrator.require(incident, "policy-gateway", "deliver_standing_playbook")
+    approve_proposals(incident, "Jordan Lee, incident commander - synthetic")
     receive_facility_updates(incident)
+    if orchestrator is not None:
+        orchestrator.require(incident, "resource-coordinator", "detect_resource_conflict")
     detect_resource_conflict(incident)
-    resolve_resource_conflict(incident, "slot-to-ltc", "Jordan Lee, incident commander — synthetic")
+    resolve_resource_conflict(incident, "slot-to-ltc", "Jordan Lee, incident commander - synthetic")
+    if orchestrator is not None:
+        orchestrator.require(incident, "resource-coordinator", "escalate_nonresponse")
     escalate_nonresponse(incident)
-    rescind_and_recover(incident, "Jordan Lee, incident commander — synthetic")
+    if orchestrator is not None:
+        orchestrator.require(incident, "recovery-verifier", "verify_recovery")
+    rescind_and_recover(incident, "Jordan Lee, incident commander - synthetic")
     return public_view(incident)
-
-
-

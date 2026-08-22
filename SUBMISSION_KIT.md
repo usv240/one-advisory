@@ -16,8 +16,8 @@ responses—without letting AI issue guidance, close facilities, or allocate sca
 | 2:05–2:40 | Surface the last-water-slot conflict; show AI selected nobody; human allocates |
 | 2:40–3:10 | Escalate school non-response, then process authorized rescission and recovery |
 | 3:10–3:35 | Open registry, audit history, sources, safeguards, and proof suite |
-| 3:35–4:00 | Show Cloud Run/Firestore/Vertex evidence, limits, and differentiation |
+| 3:35–4:00 | Show live Gemini receipts, all four managed-runtime command receipts, Cloud Run/Firestore, limits, and differentiation |
 
-Required release proof: public Cloud Run URL, live Gemini recording and truth-set report, passing
+Required release proof: public Cloud Run URL, live fail-closed Gemini + Embedding receipts, managed-agent trace, and truth-set report, passing
 deployed demo, architecture, public repository, short video, and explicit synthetic/non-endorsement
 labels.
