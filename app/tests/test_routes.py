@@ -15,16 +15,12 @@ def test_public_contract_and_full_flow():
     assert health["advisory_authority"] == health["resource_authority"] == "human-only"
     incident = post("/api/incidents").json()
     incident_id = incident["incident_id"]
-    assert post(f"/api/incidents/{incident_id}/approve", {"approver": "Jordan Lee"}).status_code == 409
-    incident = post(f"/api/incidents/{incident_id}/activate").json()
-    post(f"/api/incidents/{incident_id}/policy-test")
-    incident = post(f"/api/incidents/{incident_id}/approve", {"approver": "Jordan Lee - synthetic"}).json()
     assert incident["status"] == "instructions_delivered"
-    post(f"/api/incidents/{incident_id}/facility-updates")
-    incident = post(f"/api/incidents/{incident_id}/detect-conflict").json()
+    incident = post(f"/api/incidents/{incident_id}/facility-updates").json()
+    assert incident["status"] == "resource_conflict"
     assert incident["resource_conflict"]["selected"] is None
-    post(f"/api/incidents/{incident_id}/allocate", {"option_id": "slot-to-ltc", "approver": "Jordan Lee - synthetic"})
-    post(f"/api/incidents/{incident_id}/escalate")
+    incident = post(f"/api/incidents/{incident_id}/allocate", {"option_id": "slot-to-ltc", "approver": "Jordan Lee - synthetic"}).json()
+    assert incident["status"] == "response_verified"
     incident = post(f"/api/incidents/{incident_id}/recover", {"approver": "Jordan Lee - synthetic"}).json()
     assert incident["status"] == "closed"
 

@@ -1,10 +1,10 @@
 # One Advisory: Validation Evidence
 
-## Verified locally on August 18, 2026
+## Verified locally on August 22, 2026
 
 | Gate | Result |
 |---|---:|
-| Python workflow, API, pilot, reader, Firestore, scheduler, platform, runtime, and hardening tests | 98 passed |
+| Python workflow, API, pilot, reader, Firestore, scheduler, platform, runtime, and hardening tests | 104 passed |
 | Static accessibility checks | 10/10 |
 | Executable HTTP demonstration | 13/13 |
 | Foundational safeguard proof | 11/11 |
@@ -18,9 +18,10 @@
 ## Deployed verification
 
 - Public service: https://one-advisory-109051079423.us-central1.run.app
-- Revision: `one-advisory-00014-9wn`.
+- Revision: `one-advisory-00016-9bg`.
 - `/health`: `firestore`, `gemini-3.5-flash`, `human-only` authority, transactional wakes, active Cloud Trace, and eleven-service Google stack inventory.
 - Live-stack proof: homepage, CSS, JavaScript, and health inventory returned HTTP 200; `/api/platform` reported live with 4 runtimes, unique identities, all gateway bindings, and 2 Model Armor templates.
+- Autonomy proof: an authorized feed auto-activated the registered fleet, rejected an out-of-policy action, delivered standing playbooks, registered three acknowledgement wakes, auto-detected the resource conflict, and auto-resumed escalation after named allocation. One POST to /api/demo/full closed the governed fleet run; the command receipt and its assets returned HTTP 200.
 - Public acceptance: `13/13`; foundational proof: `11/11`; hardening proof: `8/8`; customer landing, readiness, and OpenAPI: HTTP 200; retired judge routes: HTTP 404.
 - Live custom-flow proof: incident `oa-df95a227191648328fe475bf51e74833` retained its supplied fictional advisory and facilities, persisted in the incident queue, exercised policy rejection and human-only scarce-resource allocation, and closed all recovery loops. Missing acknowledgement returned HTTP 422; global reset returned HTTP 403.
 - Deployment uncovered and fixed Firestore-invalid nested coordinate arrays; a regression test now scans the incident shape.

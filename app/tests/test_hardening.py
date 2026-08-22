@@ -36,8 +36,6 @@ def test_hardening_proof_and_trace_headers():
 
 def test_three_facility_wakes_fire_once():
     incident_id = client.post("/api/incidents").json()["incident_id"]
-    assert client.post(f"/api/incidents/{incident_id}/activate").status_code == 200
-    assert client.post(f"/api/hardening/incidents/{incident_id}/approve-and-watch", json={"approver": "Jordan Lee - synthetic"}).status_code == 200
     wakes = client.get(f"/api/hardening/incidents/{incident_id}/wakes").json()["wakes"]
     assert len(wakes) == 3
     client.post("/api/hardening/advance", json={"minutes": 21})

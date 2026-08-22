@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import timedelta
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
@@ -10,6 +11,7 @@ from pydantic import BaseModel, Field
 from one_advisory.store import IncidentStore
 from one_advisory.workflow import (
     activate_fleet,
+    advance_safe_automation,
     approve_proposals,
     create_incident,
     detect_resource_conflict,
@@ -32,8 +34,20 @@ class AllocationRequest(BaseModel):
     approver: str = Field(min_length=3, max_length=140)
 
 
-def build_router(store: IncidentStore, *, allow_global_reset: bool = False) -> APIRouter:
+def build_router(store: IncidentStore, scheduler=None, *, allow_global_reset: bool = False) -> APIRouter:
     router = APIRouter(prefix="/api", tags=["one-advisory"])
+
+    def schedule_facility_checks(incident: dict[str, Any]) -> None:
+        if scheduler is None or incident["status"] != "instructions_delivered":
+            return
+        for facility in incident["facilities"]:
+            scheduler.sleep_for(
+                incident["incident_id"],
+                "facility_ack_check",
+                timedelta(minutes=20),
+                {"facility_id": facility["facility_id"]},
+                facility["facility_id"],
+            )
 
     def require(incident_id: str) -> dict[str, Any]:
         incident = store.get(incident_id)
@@ -53,6 +67,8 @@ def build_router(store: IncidentStore, *, allow_global_reset: bool = False) -> A
     @router.post("/incidents")
     def open_incident() -> dict[str, Any]:
         incident = create_incident()
+        advance_safe_automation(incident)
+        schedule_facility_checks(incident)
         store.put(incident)
         return public_view(incident)
 
@@ -60,6 +76,10 @@ def build_router(store: IncidentStore, *, allow_global_reset: bool = False) -> A
     def get_incident(incident_id: str) -> dict[str, Any]:
         return public_view(require(incident_id))
 
+    @router.post("/incidents/{incident_id}/autopilot")
+    def autopilot(incident_id: str) -> dict[str, Any]:
+        """Resume governed work and stop at the next external or authority event."""
+        return mutate(incident_id, advance_safe_automation)
     @router.post("/incidents/{incident_id}/activate")
     def activate(incident_id: str) -> dict[str, Any]:
         return mutate(incident_id, activate_fleet)
@@ -74,7 +94,7 @@ def build_router(store: IncidentStore, *, allow_global_reset: bool = False) -> A
 
     @router.post("/incidents/{incident_id}/facility-updates")
     def facility_updates(incident_id: str) -> dict[str, Any]:
-        return mutate(incident_id, receive_facility_updates)
+        return mutate(incident_id, lambda incident: (receive_facility_updates(incident), advance_safe_automation(incident)))
 
     @router.post("/incidents/{incident_id}/detect-conflict")
     def conflict(incident_id: str) -> dict[str, Any]:
@@ -82,7 +102,7 @@ def build_router(store: IncidentStore, *, allow_global_reset: bool = False) -> A
 
     @router.post("/incidents/{incident_id}/allocate")
     def allocate(incident_id: str, request: AllocationRequest) -> dict[str, Any]:
-        return mutate(incident_id, lambda incident: resolve_resource_conflict(incident, request.option_id, request.approver))
+        return mutate(incident_id, lambda incident: (resolve_resource_conflict(incident, request.option_id, request.approver), advance_safe_automation(incident)))
 
     @router.post("/incidents/{incident_id}/escalate")
     def escalate(incident_id: str) -> dict[str, Any]:

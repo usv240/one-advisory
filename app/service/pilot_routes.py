@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import timedelta
 from typing import Any, Literal
 
 from fastapi import APIRouter, HTTPException
@@ -9,7 +10,7 @@ from pydantic import BaseModel, Field, HttpUrl
 
 from one_advisory.pilot import create_pilot_incident
 from one_advisory.store import IncidentStore
-from one_advisory.workflow import public_view
+from one_advisory.workflow import advance_safe_automation, public_view
 
 
 class AdvisoryInput(BaseModel):
@@ -46,7 +47,7 @@ def _summary(incident: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def build_pilot_router(store: IncidentStore) -> APIRouter:
+def build_pilot_router(store: IncidentStore, scheduler=None) -> APIRouter:
     router = APIRouter(prefix="/api/pilot", tags=["one-advisory-pilot"])
 
     @router.get("/incidents")
@@ -58,6 +59,10 @@ def build_pilot_router(store: IncidentStore) -> APIRouter:
     def open_incident(request: PilotIncidentRequest) -> dict[str, Any]:
         try:
             incident = create_pilot_incident(request.model_dump(mode="json"))
+            advance_safe_automation(incident)
+            if scheduler is not None and incident["status"] == "instructions_delivered":
+                for facility in incident["facilities"]:
+                    scheduler.sleep_for(incident["incident_id"], "facility_ack_check", timedelta(minutes=20), {"facility_id": facility["facility_id"]}, facility["facility_id"])
         except ValueError as exc:
             raise HTTPException(status_code=422, detail=str(exc)) from exc
         store.put(incident)

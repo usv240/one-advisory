@@ -16,6 +16,10 @@ and verifies recovery after rescission.
 
 The header's **Live stack** control reads `/health` and `/api/platform` at runtime. It turns green only when both the Cloud Run service and managed agent evidence plane verify live. Hover, click, or keyboard focus reveals the Google stack in use: Gemini 3.5 Flash on Vertex AI, Google Gen AI SDK, Cloud Run, Firestore, Cloud Scheduler, Cloud Trace, Agent Registry, Agent Runtime, Agent Identity, Agent Gateway, and Model Armor.
 
+## Autonomy contract and design identity
+
+POST /api/demo/full completes the synthetic governed fleet response in one server request. In the input-driven path, an authorized advisory automatically activates registered agents, rejects an out-of-policy action, applies pre-authorized standing playbooks, delivers facility work, and creates durable acknowledgement wakes. Facility events automatically trigger conflict analysis; one named scarce-resource allocation resumes escalation. Issuance and rescission remain authoritative external events. The UI is deliberately a squared, high-contrast incident-command grid rather than a consumer dashboard.
+
 ## Public operational sandbox
 
 The public Cloud Run service is intentionally signup-free for hackathon evaluation and accepts fictional synthetic inputs only. It is no longer limited to one fixture: users can create multiple durable advisory exercises, supply a fictional authorized advisory and three critical-facility records, switch between incidents, and run each through the complete authority-gated response. `GET/POST /api/pilot/incidents` exposes the same capability as a typed API; `/api/pilot/readiness` states the boundary.

@@ -281,6 +281,39 @@ def rescind_and_recover(incident: dict[str, Any], approver: str) -> dict[str, An
     return incident
 
 
+def advance_safe_automation(incident: dict[str, Any]) -> list[str]:
+    """Run governed fleet work until an external event or authority decision is required."""
+    actions: list[str] = []
+    while True:
+        if incident["status"] == "authorized_advisory_received":
+            activate_fleet(incident)
+            actions.append("registered_fleet_activated")
+            reject_unregistered_action(incident)
+            actions.append("unauthorized_action_rejected")
+            approve_proposals(incident, "Standing response policy - synthetic pre-authorization")
+            actions.append("facility_playbooks_delivered")
+            continue
+        if incident["status"] == "responses_in_progress":
+            detect_resource_conflict(incident)
+            actions.append("resource_conflict_detected")
+            continue
+        if incident["status"] == "allocation_approved":
+            escalate_nonresponse(incident)
+            actions.append("nonresponse_escalated")
+            continue
+        break
+    incident["last_autonomy_run"] = {
+        "actions": actions,
+        "stopped_at": incident["status"],
+        "waiting_for": {
+            "instructions_delivered": "facility_update_events",
+            "resource_conflict": "incident_commander_allocation",
+            "response_verified": "authorized_rescission_event",
+            "closed": None,
+        }.get(incident["status"], "unsupported_state"),
+    }
+    return actions
+
 def public_view(incident: dict[str, Any]) -> dict[str, Any]:
     view = deepcopy(incident)
     states = [facility["response_state"] for facility in incident["facilities"]]
@@ -291,6 +324,15 @@ def public_view(incident: dict[str, Any]) -> dict[str, Any]:
         "open_escalations": sum(row["status"] != "resolved" for row in incident["escalations"]),
         "policy_rejections": len(incident["policy_rejections"]),
         "human_allocation": bool((incident.get("resource_conflict") or {}).get("selected")),
+    }
+    view["autonomy"] = {
+        "trigger": "authorized advisory feed",
+        "automatic_actions": ["activate registered fleet", "apply standing playbooks", "deliver differentiated tasks", "detect resource conflicts", "escalate silence", "run recovery checks"],
+        "authority_checkpoints": ["scarce-resource allocation"],
+        "external_authority_events": ["advisory issuance", "advisory rescission"],
+        "current_wait": None if incident["status"] == "closed" else (incident.get("last_autonomy_run") or {}).get("waiting_for", "authorized_advisory_event"),
+        "last_run_actions": (incident.get("last_autonomy_run") or {}).get("actions", []),
+        "complete": incident["status"] == "closed",
     }
     return view
 
