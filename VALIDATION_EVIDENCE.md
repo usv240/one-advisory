@@ -70,7 +70,7 @@ production or impact claim.
 
 ## Developer API and cumulative autonomy proof — 2026-08-22
 
-- Final Cloud Run revision: `one-advisory-00024-vjm`, 100% traffic.
+- Final Cloud Run revision: `one-advisory-00025-nwn`, 100% traffic.
 - Live external flow: missing key returned HTTP 401; self-service key issuance succeeded; authenticated table-top returned HTTP 201 with `X-RateLimit-Limit: 50` and `X-RateLimit-Remaining: 49`.
 - Derived autonomy receipt: 8 automatic trace events, 2 protected commander events, 6 managed Agent Runtime commands, 0 continue clicks; synthetic table-top injection is explicitly disclosed.
 - Firestore field audit confirmed digests/fingerprints only: no plaintext key and no raw IP.
