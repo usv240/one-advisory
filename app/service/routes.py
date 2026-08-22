@@ -86,6 +86,10 @@ def build_router(store: IncidentStore, scheduler=None, *, allow_global_reset: bo
     def get_incident_trace(incident_id: str) -> dict[str, Any]:
         return public_action_trace(require(incident_id), "incident_id")
 
+    @router.get("/incidents/{incident_id}/autonomy-proof")
+    def get_incident_autonomy_proof(incident_id: str) -> dict[str, Any]:
+        return public_view(require(incident_id))["autonomy_proof"]
+
     @router.post("/incidents/{incident_id}/autopilot")
     def autopilot(incident_id: str) -> dict[str, Any]:
         """Resume governed work and stop at the next external or authority event."""

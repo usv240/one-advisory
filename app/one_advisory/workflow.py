@@ -6,6 +6,7 @@ from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 from typing import Any
 from uuid import uuid4
+from spine.autonomy_proof import build_autonomy_proof
 
 BASE_TIME = datetime(2026, 8, 16, 9, 30, tzinfo=timezone.utc)
 
@@ -322,6 +323,7 @@ def advance_safe_automation(incident: dict[str, Any], orchestrator=None) -> list
             "closed": None,
         }.get(incident["status"], "unsupported_state"),
     }
+    incident.setdefault("autonomy_runs", []).append(deepcopy(incident["last_autonomy_run"]))
     return actions
 
 def public_view(incident: dict[str, Any]) -> dict[str, Any]:
@@ -344,6 +346,13 @@ def public_view(incident: dict[str, Any]) -> dict[str, Any]:
         "last_run_actions": (incident.get("last_autonomy_run") or {}).get("actions", []),
         "complete": incident["status"] == "closed",
     }
+    view["autonomy_proof"] = build_autonomy_proof(
+        incident,
+        id_field="incident_id",
+        automatic_actors=("agent", "gateway", "contact"),
+        authority_actors=("incident commander",),
+        external_actors=("authorized feed", "facility", "authorized synthetic intake"),
+    )
     return view
 
 
@@ -369,4 +378,5 @@ def run_full_demo(incident: dict[str, Any] | None = None, orchestrator=None) -> 
     if orchestrator is not None:
         orchestrator.require(incident, "recovery-verifier", "verify_recovery")
     rescind_and_recover(incident, "Jordan Lee, incident commander - synthetic")
+    incident["demo_completion_mode"] = "synthetic_tabletop"
     return public_view(incident)

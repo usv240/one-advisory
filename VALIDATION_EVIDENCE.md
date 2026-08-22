@@ -4,7 +4,7 @@
 
 | Gate | Result |
 |---|---:|
-| Python workflow, API, pilot, reader, Firestore, scheduler, platform, runtime, and hardening tests | 104 passed |
+| Python workflow, API, pilot, reader, Firestore, scheduler, platform, runtime, and hardening tests | 117 passed |
 | Static accessibility checks | 10/10 |
 | Executable HTTP demonstration | 13/13 |
 | Foundational safeguard proof | 11/11 |
@@ -58,7 +58,7 @@ production or impact claim.
 ## 2026-08-22 live release proof
 
 - Cloud Run revision: `one-advisory-00020-bs4` (100% traffic; max instances 1; concurrency 10).
-- Final local suite: **111 passed**.
+- Final local suite: **117 passed**.
 - All four Agent Runtime revisions independently passed typed-command verification with structural request screening and typed response controls.
 - Live full workflow: incident `oa-5076b5ccf2b64c1b9caffaced08ab320` closed in 23.4 seconds.
 - The primary request recorded **6 managed-agent receipts** across all four roles and all six commands.
@@ -66,3 +66,12 @@ production or impact claim.
 - Executable proof endpoint: **11/11**. Public action trace: **14 events**. `/api/platform` and `/api/model-evidence` returned 200.
 - The in-app browser could not connect because the workspace Windows browser helper failed before opening a tab. No visual-browser result is claimed; static UI/accessibility contracts and deployed HTTP behavior were verified.
 - Stakeholder outcomes and bonus publication points remain unclaimed pending real consented evidence/public URLs.
+
+
+## Developer API and cumulative autonomy proof — 2026-08-22
+
+- Final Cloud Run revision: `one-advisory-00024-vjm`, 100% traffic.
+- Live external flow: missing key returned HTTP 401; self-service key issuance succeeded; authenticated table-top returned HTTP 201 with `X-RateLimit-Limit: 50` and `X-RateLimit-Remaining: 49`.
+- Derived autonomy receipt: 8 automatic trace events, 2 protected commander events, 6 managed Agent Runtime commands, 0 continue clicks; synthetic table-top injection is explicitly disclosed.
+- Firestore field audit confirmed digests/fingerprints only: no plaintext key and no raw IP.
+- Secret Manager version 1 is pinned, the developer UI and OpenAPI docs returned HTTP 200, and the live health inventory includes Secret Manager.

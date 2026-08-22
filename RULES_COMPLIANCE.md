@@ -19,3 +19,11 @@
 | Optional public content/social post | Drafts are in `docs/`; eligible platform publication remains entrant action | Entrant action |
 
 All facilities, people, advisories, allocations and contacts are fictional or sandboxed. The service does not issue public-health guidance.
+
+## Additional production evidence
+
+| Requirement | Implementation | Status |
+|---|---|---|
+| Self-service integration | Keyless judge UI plus protected `/v1`, no account required, 50 requests per key and network per UTC day | Pass |
+| Secure public endpoint | HMAC-only keys, fingerprint-only IP handling, Secret Manager pepper, atomic Firestore quota transactions | Pass |
+| Visible autonomy | Cumulative trace-derived receipt, direct proof endpoint, zero continue-click count, honest synthetic-event disclosure | Pass |
